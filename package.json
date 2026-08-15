@@ -1,0 +1,24 @@
+{
+  "name": "classflow-ai-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ClassFlow AI — Smart Classroom Management & AI-Powered College Timetable Scheduler",
+  "scripts": {
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "start:server": "npm --prefix server start",
+    "build:client": "npm --prefix client run build"
+  },
+  "keywords": [
+    "timetable-generator",
+    "scheduler",
+    "or-tools",
+    "express",
+    "react",
+    "mongodb",
+    "fastapi"
+  ],
+  "author": "ClassFlow AI Team",
+  "license": "ISC"
+}
