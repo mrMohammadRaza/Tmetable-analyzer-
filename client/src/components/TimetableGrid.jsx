@@ -4,15 +4,11 @@ import {
   Cpu, 
   Download, 
   Share2, 
-  Sparkles, 
   CheckCircle2, 
-  AlertCircle, 
-  Layers, 
-  Edit3, 
-  RefreshCw,
-  FileSpreadsheet
+  Flame
 } from 'lucide-react';
 import { timetableAPI, entityAPI } from '../services/api';
+import firestoreSync from '../services/firestoreSync';
 
 const DEFAULT_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const DEFAULT_SLOTS = [
@@ -31,7 +27,6 @@ export default function TimetableGrid({ user }) {
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [publishMessage, setPublishMessage] = useState('');
-  const [filterEntity, setFilterEntity] = useState('division'); // 'division', 'faculty', 'room'
   const [departments, setDepartments] = useState([]);
   const [selectedDepartmentId, setSelectedDepartmentId] = useState('');
 
@@ -59,9 +54,6 @@ export default function TimetableGrid({ user }) {
       if (res.data.success && res.data.data.length > 0) {
         setTimetables(res.data.data);
         fetchSingleTimetable(res.data.data[0]._id);
-      } else {
-        setTimetables([]);
-        setSelectedTimetable(null);
       }
     } catch (err) {
       console.warn('Timetables fetch error:', err.message);
@@ -93,7 +85,11 @@ export default function TimetableGrid({ user }) {
       });
 
       if (res.data.success) {
-        setPublishMessage(`Timetable successfully generated via ${res.data.data.solverEngine || 'Google OR-Tools CP-SAT Solver'}! Score: ${res.data.data.timetable.optimizationScore}/100`);
+        const generatedData = res.data.data.timetable;
+        // Sync to Firebase Firestore
+        await firestoreSync.syncTimetableToFirestore(generatedData);
+
+        setPublishMessage(`Timetable successfully generated via ${res.data.data.solverEngine || 'Google OR-Tools CP-SAT Solver'} & synced to Firebase Firestore! Score: ${generatedData.optimizationScore}/100`);
         fetchTimetables();
       }
     } catch (err) {
@@ -108,7 +104,13 @@ export default function TimetableGrid({ user }) {
     try {
       const res = await timetableAPI.publish(selectedTimetable._id);
       if (res.data.success) {
-        setPublishMessage('Timetable published officially! Socket.IO alerts sent to all faculty & students.');
+        // Sync published status to Firebase Firestore project timetable-analyzer
+        await firestoreSync.syncTimetableToFirestore({
+          ...selectedTimetable,
+          status: 'published',
+        });
+
+        setPublishMessage('Timetable published officially & synced to Firebase Firestore (timetable-analyzer project)! Socket.IO alerts sent.');
         fetchSingleTimetable(selectedTimetable._id);
       }
     } catch (err) {
@@ -116,7 +118,6 @@ export default function TimetableGrid({ user }) {
     }
   };
 
-  // Helper to find slot content for specific day & slotIndex
   const getSlotContent = (day, slotIndex) => {
     if (!selectedTimetable || !selectedTimetable.activeVersionId || !selectedTimetable.activeVersionId.slots) {
       return null;
@@ -126,7 +127,6 @@ export default function TimetableGrid({ user }) {
     );
   };
 
-  // Sample static demo schedule if database is empty initially
   const renderFallbackSlot = (day, slotIndex) => {
     if (slotIndex === 0 && day === 'Monday') {
       return {
@@ -165,10 +165,16 @@ export default function TimetableGrid({ user }) {
       {/* Header Toolbar */}
       <div className="glass-panel p-6 rounded-2xl border border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight flex items-center space-x-3">
-            <Calendar className="w-6 h-6 text-indigo-400" />
-            <span>{selectedTimetable ? selectedTimetable.title : 'College Timetable Studio'}</span>
-          </h2>
+          <div className="flex items-center space-x-2">
+            <h2 className="text-2xl font-bold text-white tracking-tight flex items-center space-x-3">
+              <Calendar className="w-6 h-6 text-indigo-400" />
+              <span>{selectedTimetable ? selectedTimetable.title : 'College Timetable Studio'}</span>
+            </h2>
+            <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold flex items-center space-x-1">
+              <Flame className="w-3 h-3 text-amber-400" />
+              <span>Firestore Synced</span>
+            </span>
+          </div>
           <p className="text-xs text-slate-400 mt-1">
             Status:{' '}
             <span className="font-semibold text-emerald-400 uppercase">
