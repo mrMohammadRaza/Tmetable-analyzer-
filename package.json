@@ -4,6 +4,9 @@
   "private": true,
   "description": "ClassFlow AI — Smart Classroom Management & AI-Powered College Timetable Scheduler",
   "scripts": {
+    "build": "npm --prefix client run build",
+    "vercel-build": "npm --prefix client run build",
+    "postinstall": "npm --prefix client install && npm --prefix server install",
     "dev:server": "npm --prefix server run dev",
     "dev:client": "npm --prefix client run dev",
     "install:all": "npm install && npm --prefix server install && npm --prefix client install",
