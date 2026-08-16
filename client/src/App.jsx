@@ -5,6 +5,7 @@ import DashboardView from './components/DashboardView';
 import TimetableGrid from './components/TimetableGrid';
 import EntityManagement from './components/EntityManagement';
 import CopilotDrawer from './components/CopilotDrawer';
+import LoginPage from './components/LoginPage';
 import { authAPI } from './services/api';
 
 export default function App() {
@@ -14,26 +15,53 @@ export default function App() {
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
 
   useEffect(() => {
-    // Check existing JWT session
+    // 1. Check saved user object in local storage for instant state restoration
+    const savedUserStr = localStorage.getItem('classflow_user');
+    if (savedUserStr) {
+      try {
+        const savedUser = JSON.parse(savedUserStr);
+        if (savedUser && savedUser.name) {
+          setUser(savedUser);
+          return;
+        }
+      } catch (e) {
+        console.warn('Failed to parse saved user from localStorage');
+      }
+    }
+
+    // 2. Fallback check for JWT token session
     const token = localStorage.getItem('classflow_token');
     if (token) {
       authAPI
         .getMe()
         .then((res) => {
-          if (res.data.success) {
+          if (res.data && res.data.success) {
             setUser(res.data.user);
+            localStorage.setItem('classflow_user', JSON.stringify(res.data.user));
           }
         })
         .catch(() => {
           localStorage.removeItem('classflow_token');
+          localStorage.removeItem('classflow_user');
         });
     }
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('classflow_token');
+    localStorage.removeItem('classflow_user');
     setUser(null);
   };
+
+  const handleAuthSuccess = (userData) => {
+    setUser(userData);
+    localStorage.setItem('classflow_user', JSON.stringify(userData));
+  };
+
+  // Render the professional full-page Login Screen first if unauthenticated
+  if (!user) {
+    return <LoginPage onAuthSuccess={handleAuthSuccess} />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
@@ -73,7 +101,7 @@ export default function App() {
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
-        onAuthSuccess={(userData) => setUser(userData)}
+        onAuthSuccess={handleAuthSuccess}
       />
 
       {/* Footer */}
