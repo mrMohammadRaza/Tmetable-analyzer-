@@ -176,25 +176,6 @@ export default function LoginPage({ onAuthSuccess }) {
     setLoading(false);
   };
 
-  // Instant 1-Click Role Login for Quick Testing
-  const handleInstantRoleLogin = (role) => {
-    setError('');
-    setSuccessMsg('');
-    setLoading(true);
-
-    const roleConfigs = {
-      admin: { name: 'Dr. Alan Turing', email: 'admin@college.edu' },
-      faculty: { name: 'Prof. Sarah Jenkins', email: 'faculty@college.edu' },
-      student: { name: 'Alex Johnson', email: 'student@college.edu' },
-    };
-
-    const config = roleConfigs[role] || roleConfigs.admin;
-    const user = createLocalFallbackUser(config.email, role, config.name, 'Quick Role Login');
-    
-    setSuccessMsg(`Access Granted! Logged in as ${config.name} (${role.toUpperCase()})`);
-    setTimeout(() => onAuthSuccess(user), 500);
-  };
-
   return (
     <div className="min-h-screen bg-[#0b0f19] text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white relative overflow-hidden">
       {/* Background Decorative Ambient Lights */}
@@ -358,39 +339,6 @@ export default function LoginPage({ onAuthSuccess }) {
                 <span>{successMsg}</span>
               </div>
             )}
-
-            {/* Quick 1-Click Role Login Buttons */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-[11px] font-bold text-slate-400">
-                <span>⚡ Instant Demo Access (1-Click):</span>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => handleInstantRoleLogin('admin')}
-                  className="py-2 px-2 rounded-xl bg-indigo-600/10 border border-indigo-500/30 hover:bg-indigo-600/25 text-indigo-300 text-xs font-bold text-center transition flex flex-col items-center justify-center space-y-0.5 group"
-                >
-                  <span className="text-sm">👑</span>
-                  <span>Admin</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleInstantRoleLogin('faculty')}
-                  className="py-2 px-2 rounded-xl bg-purple-600/10 border border-purple-500/30 hover:bg-purple-600/25 text-purple-300 text-xs font-bold text-center transition flex flex-col items-center justify-center space-y-0.5 group"
-                >
-                  <span className="text-sm">🎓</span>
-                  <span>Faculty</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleInstantRoleLogin('student')}
-                  className="py-2 px-2 rounded-xl bg-emerald-600/10 border border-emerald-500/30 hover:bg-emerald-600/25 text-emerald-300 text-xs font-bold text-center transition flex flex-col items-center justify-center space-y-0.5 group"
-                >
-                  <span className="text-sm">🎒</span>
-                  <span>Student</span>
-                </button>
-              </div>
-            </div>
 
             {/* Google Sign-In */}
             <button

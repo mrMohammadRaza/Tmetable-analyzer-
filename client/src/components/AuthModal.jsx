@@ -185,27 +185,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
     setLoading(false);
   };
 
-  const handleInstantRoleLogin = (role) => {
-    setError('');
-    setSuccessMsg('');
-    setLoading(true);
-
-    const roleConfigs = {
-      admin: { name: 'Dr. Alan Turing', email: 'admin@college.edu' },
-      faculty: { name: 'Prof. Sarah Jenkins', email: 'faculty@college.edu' },
-      student: { name: 'Alex Johnson', email: 'student@college.edu' },
-    };
-
-    const config = roleConfigs[role] || roleConfigs.admin;
-    const user = createLocalFallbackUser(config.email, role, config.name, 'Quick Role Login');
-    
-    setSuccessMsg(`Access Granted! Logged in as ${config.name}`);
-    setTimeout(() => {
-      onAuthSuccess(user);
-      onClose();
-    }, 500);
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div className="relative max-w-md w-full glass-panel border border-slate-700/80 rounded-3xl p-6 shadow-2xl space-y-5 bg-[#0f172a]/95">
@@ -226,34 +205,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }) {
           <p className="text-xs text-slate-400">
             Real Authentication & Identity Verification for ClassFlow AI
           </p>
-        </div>
-
-        {/* Quick Role 1-Click Access */}
-        <div className="space-y-1">
-          <span className="text-[11px] font-semibold text-slate-400 block">⚡ Instant Demo Access:</span>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => handleInstantRoleLogin('admin')}
-              className="py-1.5 px-2 rounded-xl bg-indigo-500/10 border border-indigo-500/30 hover:bg-indigo-500/20 text-indigo-300 text-xs font-bold text-center transition"
-            >
-              👑 Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => handleInstantRoleLogin('faculty')}
-              className="py-1.5 px-2 rounded-xl bg-purple-500/10 border border-purple-500/30 hover:bg-purple-500/20 text-purple-300 text-xs font-bold text-center transition"
-            >
-              🎓 Faculty
-            </button>
-            <button
-              type="button"
-              onClick={() => handleInstantRoleLogin('student')}
-              className="py-1.5 px-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 hover:bg-emerald-500/20 text-emerald-300 text-xs font-bold text-center transition"
-            >
-              🎒 Student
-            </button>
-          </div>
         </div>
 
         {error && (
