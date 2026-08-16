@@ -203,21 +203,21 @@ export default function LoginPage({ onAuthSuccess }) {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full filter blur-[150px] pointer-events-none"></div>
 
       {/* Top Header Navigation */}
-      <header className="px-8 py-5 flex items-center justify-between border-b border-slate-800/80 backdrop-blur-md sticky top-0 z-30 bg-[#0b0f19]/80">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-            <Calendar className="w-5 h-5 text-white" />
+      <header className="px-4 sm:px-8 py-3 sm:py-5 flex items-center justify-between border-b border-slate-800/80 backdrop-blur-md sticky top-0 z-30 bg-[#0b0f19]/80">
+        <div className="flex items-center space-x-2.5 sm:space-x-3">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-500/30 shrink-0">
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
           </div>
           <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-indigo-300 bg-clip-text text-transparent">
+            <div className="flex items-center space-x-1.5 sm:space-x-2">
+              <span className="text-base sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-indigo-300 bg-clip-text text-transparent">
                 ClassFlow AI
               </span>
-              <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              <span className="px-1.5 py-0.5 text-[9px] sm:text-[10px] font-bold uppercase rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
                 v1.0
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium">Smart College Timetable Scheduler & Management</p>
+            <p className="hidden xs:block text-[10px] sm:text-[11px] text-slate-400 font-medium">Smart College Timetable Scheduler & Management</p>
           </div>
         </div>
 
@@ -230,7 +230,7 @@ export default function LoginPage({ onAuthSuccess }) {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6 md:p-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center z-10">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6 md:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center z-10">
         
         {/* Left Side: Product Showcase & Features */}
         <div className="lg:col-span-7 space-y-8">

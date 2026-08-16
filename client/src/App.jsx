@@ -77,7 +77,7 @@ export default function App() {
       />
 
       {/* Main App Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-4 sm:py-6">
         {activeTab === 'dashboard' && (
           <DashboardView
             user={user}

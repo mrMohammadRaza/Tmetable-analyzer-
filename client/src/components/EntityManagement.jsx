@@ -84,10 +84,10 @@ export default function EntityManagement({ user }) {
   return (
     <div className="space-y-6 animate-fadeIn">
       {/* Tab Switcher */}
-      <div className="glass-panel p-4 rounded-2xl border border-slate-800 flex items-center space-x-2 overflow-x-auto text-xs font-bold">
+      <div className="glass-panel p-3 sm:p-4 rounded-2xl border border-slate-800 flex items-center space-x-2 overflow-x-auto text-xs font-bold no-scrollbar">
         <button
           onClick={() => setActiveTab('departments')}
-          className={`px-4 py-2 rounded-xl transition flex items-center space-x-2 ${
+          className={`px-3.5 sm:px-4 py-2 rounded-xl transition flex items-center space-x-2 shrink-0 ${
             activeTab === 'departments' ? 'bg-indigo-600 text-white' : 'bg-slate-900/60 text-slate-400 hover:text-white'
           }`}
         >
@@ -97,7 +97,7 @@ export default function EntityManagement({ user }) {
 
         <button
           onClick={() => setActiveTab('faculty')}
-          className={`px-4 py-2 rounded-xl transition flex items-center space-x-2 ${
+          className={`px-3.5 sm:px-4 py-2 rounded-xl transition flex items-center space-x-2 shrink-0 ${
             activeTab === 'faculty' ? 'bg-indigo-600 text-white' : 'bg-slate-900/60 text-slate-400 hover:text-white'
           }`}
         >
@@ -107,7 +107,7 @@ export default function EntityManagement({ user }) {
 
         <button
           onClick={() => setActiveTab('subjects')}
-          className={`px-4 py-2 rounded-xl transition flex items-center space-x-2 ${
+          className={`px-3.5 sm:px-4 py-2 rounded-xl transition flex items-center space-x-2 shrink-0 ${
             activeTab === 'subjects' ? 'bg-indigo-600 text-white' : 'bg-slate-900/60 text-slate-400 hover:text-white'
           }`}
         >
@@ -117,7 +117,7 @@ export default function EntityManagement({ user }) {
 
         <button
           onClick={() => setActiveTab('rooms')}
-          className={`px-4 py-2 rounded-xl transition flex items-center space-x-2 ${
+          className={`px-3.5 sm:px-4 py-2 rounded-xl transition flex items-center space-x-2 shrink-0 ${
             activeTab === 'rooms' ? 'bg-indigo-600 text-white' : 'bg-slate-900/60 text-slate-400 hover:text-white'
           }`}
         >
