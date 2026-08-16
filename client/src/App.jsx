@@ -6,6 +6,7 @@ import TimetableGrid from './components/TimetableGrid';
 import EntityManagement from './components/EntityManagement';
 import CopilotDrawer from './components/CopilotDrawer';
 import LoginPage from './components/LoginPage';
+import CustomDataGenerator from './components/CustomDataGenerator';
 import { authAPI } from './services/api';
 
 export default function App() {
@@ -13,6 +14,17 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard'); // 'dashboard', 'timetable', 'entities'
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isCopilotOpen, setIsCopilotOpen] = useState(false);
+
+  // Multi-Tenant Registered Institutions State
+  const [institutionsList, setInstitutionsList] = useState([
+    { id: 'inst_1', name: 'Imperial Institute of Technology', type: 'college' },
+    { id: 'inst_2', name: 'St. Xavier Senior Secondary School', type: 'school' },
+  ]);
+  const [activeInstitution, setActiveInstitution] = useState(institutionsList[0]);
+
+  // Custom Data Feeding Generator State
+  const [isCustomGeneratorOpen, setIsCustomGeneratorOpen] = useState(false);
+  const [customTimetable, setCustomTimetable] = useState(null);
 
   useEffect(() => {
     // 1. Check saved user object in local storage for instant state restoration
@@ -58,6 +70,12 @@ export default function App() {
     localStorage.setItem('classflow_user', JSON.stringify(userData));
   };
 
+  const handleCustomGenerated = (generatedTT) => {
+    setCustomTimetable(generatedTT);
+    setActiveTab('timetable');
+    setIsCustomGeneratorOpen(false);
+  };
+
   // Render the professional full-page Login Screen first if unauthenticated
   if (!user) {
     return <LoginPage onAuthSuccess={handleAuthSuccess} />;
@@ -74,6 +92,10 @@ export default function App() {
         isCopilotOpen={isCopilotOpen}
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        activeInstitution={activeInstitution}
+        setActiveInstitution={setActiveInstitution}
+        institutionsList={institutionsList}
+        onOpenCustomGenerator={() => setIsCustomGeneratorOpen(true)}
       />
 
       {/* Main App Content Area */}
@@ -83,18 +105,40 @@ export default function App() {
             user={user}
             onNavigateTimetables={() => setActiveTab('timetable')}
             onOpenSeed={() => setActiveTab('entities')}
+            activeInstitution={activeInstitution}
+            onOpenCustomGenerator={() => setIsCustomGeneratorOpen(true)}
           />
         )}
 
-        {activeTab === 'timetable' && <TimetableGrid user={user} />}
+        {activeTab === 'timetable' && (
+          <TimetableGrid 
+            user={user} 
+            activeInstitution={activeInstitution}
+            customTimetable={customTimetable}
+            onOpenCustomGenerator={() => setIsCustomGeneratorOpen(true)}
+          />
+        )}
 
-        {activeTab === 'entities' && <EntityManagement user={user} />}
+        {activeTab === 'entities' && (
+          <EntityManagement 
+            user={user} 
+            activeInstitution={activeInstitution}
+          />
+        )}
       </main>
 
       {/* ClassFlow Copilot AI Sidebar */}
       <CopilotDrawer
         isOpen={isCopilotOpen}
         onClose={() => setIsCopilotOpen(false)}
+      />
+
+      {/* Custom Data Feed & Generator Modal */}
+      <CustomDataGenerator
+        isOpen={isCustomGeneratorOpen}
+        onClose={() => setIsCustomGeneratorOpen(false)}
+        activeInstitution={activeInstitution}
+        onGenerated={handleCustomGenerated}
       />
 
       {/* Authentication Modal */}
@@ -106,7 +150,7 @@ export default function App() {
 
       {/* Footer */}
       <footer className="glass-panel border-t border-slate-800 py-4 px-6 text-center text-xs text-slate-500 mt-auto">
-        ClassFlow AI © 2026 — Smart College Timetable Generator & Classroom Management System
+        ClassFlow AI © 2026 — Smart College & School Timetable Generator & Management System
       </footer>
     </div>
   );

@@ -8,11 +8,13 @@ import {
   CheckCircle2, 
   Zap, 
   Cpu, 
-  FileSpreadsheet
+  FileSpreadsheet,
+  Sliders,
+  School
 } from 'lucide-react';
 import { analyticsAPI, timetableAPI } from '../services/api';
 
-export default function DashboardView({ user, onNavigateTimetables, onOpenSeed }) {
+export default function DashboardView({ user, onNavigateTimetables, onOpenSeed, activeInstitution, onOpenCustomGenerator }) {
   const [stats, setStats] = useState({
     rooms: 4,
     faculty: 4,
@@ -51,7 +53,7 @@ export default function DashboardView({ user, onNavigateTimetables, onOpenSeed }
     try {
       const res = await timetableAPI.seedDemo();
       if (res.data.success) {
-        setSeedSuccess('College infrastructure seeded successfully with 2 Departments, 4 Rooms, 4 Faculty!');
+        setSeedSuccess('College & School campus infrastructure seeded successfully!');
         fetchDashboardAnalytics();
       }
     } catch (err) {
@@ -61,6 +63,8 @@ export default function DashboardView({ user, onNavigateTimetables, onOpenSeed }
     }
   };
 
+  const instTypeLabel = activeInstitution?.type === 'school' ? 'Registered School' : 'Registered College';
+
   return (
     <div className="space-y-6 sm:space-y-8 animate-fadeIn">
       {/* Hero Welcome & Quick Setup Banner */}
@@ -68,26 +72,31 @@ export default function DashboardView({ user, onNavigateTimetables, onOpenSeed }
         <div className="absolute right-0 top-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div className="space-y-2.5 max-w-2xl">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-xs font-semibold">
-              <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>Google OR-Tools CP-SAT Solver Active</span>
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md bg-indigo-500/20 border border-indigo-500/40 text-indigo-300 text-xs font-semibold">
+                <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>Google OR-Tools CP-SAT Solver Active</span>
+              </span>
+              <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-md bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xs font-semibold">
+                {activeInstitution?.type === 'school' ? <School className="w-3.5 h-3.5 text-cyan-300" /> : <Building2 className="w-3.5 h-3.5 text-indigo-300" />}
+                <span>{instTypeLabel}: {activeInstitution?.name || 'Imperial Institute'}</span>
+              </span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               {user ? `Welcome back, ${user.name}` : 'ClassFlow AI Campus Dashboard'}
             </h2>
             <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">
-              Real-time college timetable generation, classroom capacity optimization, and hard conflict detection engine.
+              Real-time timetable generation, classroom capacity optimization, and custom user data feeding engine for Colleges & Schools.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
             <button
-              onClick={handleSeedDemoData}
-              disabled={loading}
-              className="px-4 py-2.5 rounded-xl bg-slate-900 border border-indigo-500/40 hover:bg-indigo-950/50 text-indigo-300 text-xs font-bold transition shadow-md flex items-center justify-center space-x-2"
+              onClick={onOpenCustomGenerator}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-indigo-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 text-xs font-extrabold transition shadow-md flex items-center justify-center space-x-2"
             >
-              <FileSpreadsheet className="w-4 h-4 text-indigo-400 shrink-0" />
-              <span>{loading ? 'Seeding Data...' : '⚡ Seed Demo College Data'}</span>
+              <Sliders className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>⚡ Feed Data & Generate</span>
             </button>
 
             <button

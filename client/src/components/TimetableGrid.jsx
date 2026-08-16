@@ -6,7 +6,9 @@ import {
   Share2, 
   CheckCircle2, 
   Flame,
-  Filter
+  Filter,
+  Sliders,
+  School
 } from 'lucide-react';
 import { timetableAPI, entityAPI } from '../services/api';
 import firestoreSync from '../services/firestoreSync';
@@ -22,9 +24,9 @@ const DEFAULT_SLOTS = [
   { index: 6, time: '15:00 - 16:00', label: 'Period 6' },
 ];
 
-export default function TimetableGrid({ user }) {
+export default function TimetableGrid({ user, activeInstitution, customTimetable, onOpenCustomGenerator }) {
   const [timetables, setTimetables] = useState([]);
-  const [selectedTimetable, setSelectedTimetable] = useState(null);
+  const [selectedTimetable, setSelectedTimetable] = useState(customTimetable || null);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [publishMessage, setPublishMessage] = useState('');
@@ -34,9 +36,15 @@ export default function TimetableGrid({ user }) {
   const [mobileViewMode, setMobileViewMode] = useState('cards'); // 'cards' or 'grid'
 
   useEffect(() => {
+    if (customTimetable) {
+      setSelectedTimetable(customTimetable);
+    }
+  }, [customTimetable]);
+
+  useEffect(() => {
     fetchTimetables();
     fetchDepartments();
-  }, []);
+  }, [activeInstitution]);
 
   const fetchDepartments = async () => {
     try {
@@ -191,6 +199,14 @@ export default function TimetableGrid({ user }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full md:w-auto">
+          <button
+            onClick={onOpenCustomGenerator}
+            className="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 to-indigo-500/20 border border-amber-500/40 hover:border-amber-400 text-amber-300 text-xs font-bold transition shadow-md flex items-center justify-center space-x-1.5"
+          >
+            <Sliders className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>Feed Data & Generate</span>
+          </button>
+
           {user?.role === 'admin' && (
             <>
               <button
@@ -199,7 +215,7 @@ export default function TimetableGrid({ user }) {
                 className="flex-1 md:flex-none px-3.5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-purple-600/30 flex items-center justify-center space-x-1.5"
               >
                 <Cpu className="w-4 h-4 shrink-0" />
-                <span>{generating ? 'Solving...' : '🤖 Generate'}</span>
+                <span>{generating ? 'Solving...' : '🤖 Auto Solve'}</span>
               </button>
 
               <button

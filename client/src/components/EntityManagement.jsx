@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, Users, BookOpen, Layers, Plus, Trash2, Edit, CheckCircle2 } from 'lucide-react';
+import { Building2, School, Users, BookOpen, Layers, Plus, Trash2, Edit, CheckCircle2 } from 'lucide-react';
 import { entityAPI } from '../services/api';
 
-export default function EntityManagement({ user }) {
+export default function EntityManagement({ user, activeInstitution }) {
   const [activeTab, setActiveTab] = useState('departments'); // 'departments', 'faculty', 'subjects', 'rooms', 'divisions'
   const [departments, setDepartments] = useState([]);
   const [faculty, setFaculty] = useState([]);
@@ -83,6 +83,33 @@ export default function EntityManagement({ user }) {
 
   return (
     <div className="space-y-6 animate-fadeIn">
+      {/* Institution Banner */}
+      <div className="glass-panel p-4 rounded-2xl border border-slate-800 flex items-center justify-between">
+        <div className="flex items-center space-x-2.5">
+          {activeInstitution?.type === 'school' ? (
+            <div className="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-purple-300">
+              <School className="w-4 h-4" />
+            </div>
+          ) : (
+            <div className="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300">
+              <Building2 className="w-4 h-4" />
+            </div>
+          )}
+          <div>
+            <div className="text-xs font-extrabold text-white">
+              {activeInstitution?.name || 'Imperial Institute of Technology'}
+            </div>
+            <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+              {activeInstitution?.type === 'school' ? 'Registered K-12 School' : 'Registered College / University'}
+            </div>
+          </div>
+        </div>
+
+        <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold">
+          Active Institution Data
+        </span>
+      </div>
+
       {/* Tab Switcher */}
       <div className="glass-panel p-3 sm:p-4 rounded-2xl border border-slate-800 flex items-center space-x-2 overflow-x-auto text-xs font-bold no-scrollbar">
         <button

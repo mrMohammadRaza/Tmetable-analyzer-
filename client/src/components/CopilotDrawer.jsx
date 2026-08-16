@@ -6,7 +6,7 @@ export default function CopilotDrawer({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: 'Hello! I am ClassFlow Copilot, your college timetable intelligence assistant. Ask me about room capacity utilization, faculty workloads, or request schedule change recommendations.',
+      content: 'Hello! I am ClassFlow Copilot, your AI timetable assistant for Colleges & Schools. Ask me about custom data feeding, teacher workloads, grade/department schedules, room utilization, or request proposed slot swaps!',
     },
   ]);
   const [inputPrompt, setInputPrompt] = useState('');
@@ -137,22 +137,34 @@ export default function CopilotDrawer({ isOpen, onClose }) {
           <span className="text-[10px] font-semibold text-slate-400 block">Suggested Queries:</span>
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5 text-[10px] sm:text-[11px]">
             <button
-              onClick={() => handleSend('Are there any faculty schedule conflicts?')}
+              onClick={() => handleSend('How do I feed custom data and generate a timetable?')}
+              className="px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-500/40 hover:border-amber-400 text-amber-300 transition shrink-0"
+            >
+              ⚡ Custom Data Feed
+            </button>
+            <button
+              onClick={() => handleSend('Show me School Class 10th timetable status')}
+              className="px-2.5 py-1 rounded-lg bg-purple-950/40 border border-purple-500/40 hover:border-purple-400 text-purple-300 transition shrink-0"
+            >
+              🏫 School Agenda
+            </button>
+            <button
+              onClick={() => handleSend('What is the College CSE Department schedule optimization score?')}
+              className="px-2.5 py-1 rounded-lg bg-indigo-950/40 border border-indigo-500/40 hover:border-indigo-400 text-indigo-300 transition shrink-0"
+            >
+              🎓 College Schedule
+            </button>
+            <button
+              onClick={() => handleSend('Are there any faculty or teacher schedule conflicts?')}
               className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-purple-500/40 text-slate-300 transition shrink-0"
             >
-              🔍 Faculty Conflicts
+              🔍 Conflict Audit
             </button>
             <button
               onClick={() => handleSend('What is the current classroom utilization rate?')}
               className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-purple-500/40 text-slate-300 transition shrink-0"
             >
               🏛️ Room Utilization
-            </button>
-            <button
-              onClick={() => handleSend('Suggest a schedule swap for Friday lab')}
-              className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 hover:border-purple-500/40 text-slate-300 transition shrink-0"
-            >
-              🔄 Propose Slot Swap
             </button>
           </div>
         </div>

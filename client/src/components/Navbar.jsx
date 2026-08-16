@@ -1,7 +1,19 @@
 import React, { useState } from 'react';
-import { Calendar, User, LogOut, Sparkles, Menu, X, LayoutDashboard, Grid, Layers } from 'lucide-react';
+import { Calendar, User, LogOut, Sparkles, Menu, X, LayoutDashboard, Grid, Layers, Building2, School, Sliders } from 'lucide-react';
 
-export default function Navbar({ user, onOpenAuth, onLogout, onToggleCopilot, isCopilotOpen, activeTab, setActiveTab }) {
+export default function Navbar({ 
+  user, 
+  onOpenAuth, 
+  onLogout, 
+  onToggleCopilot, 
+  isCopilotOpen, 
+  activeTab, 
+  setActiveTab,
+  activeInstitution,
+  setActiveInstitution,
+  institutionsList,
+  onOpenCustomGenerator
+}) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleTabClick = (tab) => {
@@ -13,7 +25,7 @@ export default function Navbar({ user, onOpenAuth, onLogout, onToggleCopilot, is
     <header className="glass-panel sticky top-0 z-40 px-4 sm:px-6 py-3 border-b border-slate-800 bg-[#0b0f19]/90 backdrop-blur-md">
       <div className="flex items-center justify-between">
         {/* Brand Logo & Title */}
-        <div className="flex items-center space-x-3 sm:space-x-6">
+        <div className="flex items-center space-x-3 sm:space-x-4">
           <div className="flex items-center space-x-2.5 sm:space-x-3 cursor-pointer" onClick={() => handleTabClick('dashboard')}>
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-500 via-purple-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-indigo-500/30 shrink-0">
               <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
@@ -27,9 +39,29 @@ export default function Navbar({ user, onOpenAuth, onLogout, onToggleCopilot, is
                   v1.0
                 </span>
               </div>
-              <p className="hidden xs:block text-[10px] sm:text-[11px] text-slate-400 font-medium">Smart College Timetable Scheduler</p>
+              <p className="hidden xs:block text-[10px] sm:text-[11px] text-slate-400 font-medium">Smart College & School Timetable Scheduler</p>
             </div>
           </div>
+
+          {/* Registered Institutions Switcher */}
+          {institutionsList && activeInstitution && (
+            <div className="hidden lg:flex items-center pl-3 border-l border-slate-800">
+              <select
+                value={activeInstitution.id}
+                onChange={(e) => {
+                  const selected = institutionsList.find((i) => i.id === e.target.value);
+                  if (selected && setActiveInstitution) setActiveInstitution(selected);
+                }}
+                className="bg-slate-900 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-indigo-300 font-bold focus:outline-none focus:border-indigo-500"
+              >
+                {institutionsList.map((inst) => (
+                  <option key={inst.id} value={inst.id}>
+                    {inst.type === 'college' ? '🎓 College: ' : '🏫 School: '} {inst.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           {/* Desktop Navigation Tabs */}
           <nav className="hidden md:flex items-center space-x-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800 text-xs font-semibold">
@@ -68,6 +100,15 @@ export default function Navbar({ user, onOpenAuth, onLogout, onToggleCopilot, is
 
         {/* Right Controls */}
         <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Custom Data Feed & Generator Setting Button */}
+          <button
+            onClick={onOpenCustomGenerator}
+            className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/20 to-indigo-500/20 border border-amber-500/40 text-amber-300 hover:border-amber-400 text-xs font-extrabold transition shadow-md"
+          >
+            <Sliders className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span>Feed Data & Generate</span>
+          </button>
+
           {/* ClassFlow Copilot Toggle Button */}
           <button
             onClick={onToggleCopilot}
@@ -138,6 +179,39 @@ export default function Navbar({ user, onOpenAuth, onLogout, onToggleCopilot, is
               </button>
             </div>
           )}
+
+          {/* Mobile Institution Switcher */}
+          {institutionsList && activeInstitution && (
+            <div className="p-2 rounded-xl bg-slate-900 border border-slate-800 space-y-1">
+              <span className="text-[10px] font-bold text-slate-400 block px-1">Registered Institution Context:</span>
+              <select
+                value={activeInstitution.id}
+                onChange={(e) => {
+                  const selected = institutionsList.find((i) => i.id === e.target.value);
+                  if (selected && setActiveInstitution) setActiveInstitution(selected);
+                }}
+                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-2 text-xs text-indigo-300 font-bold focus:outline-none"
+              >
+                {institutionsList.map((inst) => (
+                  <option key={inst.id} value={inst.id}>
+                    {inst.type === 'college' ? '🎓 College: ' : '🏫 School: '} {inst.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Mobile Custom Data Feed & Generator Button */}
+          <button
+            onClick={() => {
+              if (onOpenCustomGenerator) onOpenCustomGenerator();
+              setIsMobileMenuOpen(false);
+            }}
+            className="w-full flex items-center justify-center space-x-2 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500/20 via-indigo-500/20 to-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-extrabold shadow-md"
+          >
+            <Sliders className="w-4 h-4 text-amber-400" />
+            <span>⚡ Feed Custom Data & Generate AI Schedule</span>
+          </button>
 
           <button
             onClick={() => handleTabClick('dashboard')}
